@@ -38,7 +38,7 @@ def predict(message, chatbot, system_prompt="", temperature=0.9, max_new_tokens=
 
 # Gradio Demo 
 with gr.Blocks(theme=gr.themes.Base()) as demo:
-    gradio.DuplicateButton()
+    gr.DuplicateButton()
     gr.ChatInterface(predict, title=title, description=description, css=css, examples=examples) 
         
 demo.queue().launch(debug=True)
