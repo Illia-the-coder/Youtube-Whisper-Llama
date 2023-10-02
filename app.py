@@ -9,8 +9,6 @@ description = """
 This Space demonstrates model [Llama-2-70b-chat-hf](https://huggingface.co/meta-llama/Llama-2-70b-chat-hf) by Meta, a Llama 2 model with 70B parameters fine-tuned for chat instructions. 
 | Model | Llama2 | Llama2-hf | Llama2-chat | Llama2-chat-hf |
 |---|---|---|---|---|
-| 7B | [Link](https://huggingface.co/meta-llama/Llama-2-7b) | [Link](https://huggingface.co/meta-llama/Llama-2-7b-hf) | [Link](https://huggingface.co/meta-llama/Llama-2-7b-chat) | [Link](https://huggingface.co/meta-llama/Llama-2-7b-chat-hf) |
-| 13B | [Link](https://huggingface.co/meta-llama/Llama-2-13b) | [Link](https://huggingface.co/meta-llama/Llama-2-13b-hf) | [Link](https://huggingface.co/meta-llama/Llama-2-13b-chat) | [Link](https://huggingface.co/meta-llama/Llama-2-13b-chat-hf) |
 | 70B | [Link](https://huggingface.co/meta-llama/Llama-2-70b) | [Link](https://huggingface.co/meta-llama/Llama-2-70b-hf) | [Link](https://huggingface.co/meta-llama/Llama-2-70b-chat) | [Link](https://huggingface.co/meta-llama/Llama-2-70b-chat-hf) |
 
 """
