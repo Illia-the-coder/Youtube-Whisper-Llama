@@ -97,7 +97,7 @@ with gr.Blocks(title=title,theme=gr.themes.Base(),description = description) as 
         )
         txt_btn = gr.Button(value="Submit text",scale=1)
         btn = gr.Audio(source="microphone", type="filepath", scale=4)
-        gradio.Examples(examples, txt_btn)
+        gr.Examples(examples, txt_btn)
         
     with gr.Row():
         audio = gr.Audio(type="numpy", streaming=True, autoplay=True, label="Generated audio response", show_label=True)
