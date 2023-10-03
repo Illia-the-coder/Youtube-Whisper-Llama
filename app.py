@@ -51,7 +51,7 @@ def transcribe(audio):
 with gr.Blocks(theme=gr.themes.Base()) as demo:
     gr.DuplicateButton()
     text = gr.Textbox()
-    micro = gradio.Microphone()
+    micro = gr.Microphone()
     micro.stop_recording(transcribe, [micro],[text])
     gr.ChatInterface(predict,text, title=title, description=description, css=css, examples=examples) 
         
