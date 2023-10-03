@@ -12,13 +12,13 @@ This Space demonstrates model [Llama-2-70b-chat-hf](https://huggingface.co/meta-
 """
 css = """.toast-wrap { display: none !important } """
 
-examples=[
-    ['Hello there! How are you doing?'],
-    ['Can you explain to me briefly what is Python programming language?'],
-    ['Explain the plot of Cinderella in a sentence.'],
-    ['How many hours does it take a man to eat a Helicopter?'],
-    ["Write a 100-word article on 'Benefits of Open-Source in AI research'"],
-    ]
+# examples=[
+#     ['Hello there! How are you doing?'],
+#     ['Can you explain to me briefly what is Python programming language?'],
+#     ['Explain the plot of Cinderella in a sentence.'],
+#     ['How many hours does it take a man to eat a Helicopter?'],
+#     ["Write a 100-word article on 'Benefits of Open-Source in AI research'"],
+#     ]
 
 
 
@@ -45,5 +45,5 @@ def predict(message, chatbot, system_prompt="", temperature=0.9, max_new_tokens=
 			1,	# int | float (numeric value between 1.0 and 2.0)
 			api_name="/chat_1")
         
-demo = gr.Interface(predict, title=title, inputs="audio", outputs="text", description=description, css=css, examples=examples)
+demo = gr.Interface(predict, title=title, inputs="audio", outputs="text", description=description, css=css)#, examples=examples)
 demo.launch(theme=gr.themes.Base())
