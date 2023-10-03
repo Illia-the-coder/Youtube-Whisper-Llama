@@ -3,6 +3,7 @@ from gradio_client import Client
 
 
 
+system_message = "\nYou are a helpful, respectful and honest assistant. Always answer as helpfully as possible, while being safe.  Your answers should not include any harmful, unethical, racist, sexist, toxic, dangerous, or illegal content. Please ensure that your responses are socially unbiased and positive in nature.\n\nIf a question does not make any sense, or is not factually coherent, explain why instead of answering something not correct. If you don't know the answer to a question, please don't share false information."
 
 title = "Llama2 70B Chatbot"
 description = """
@@ -71,7 +72,7 @@ def bot(history, system_prompt=""):
                     4096,
                     temperature,
                     repetition_penalty,
-                    api_name="/chat"
+                    api_name="/chat_1"
     ):
         history[-1][1] = character
         yield history  
