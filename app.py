@@ -41,7 +41,7 @@ def transcribe(audio):
     whisper_client = Client("https://sanchit-gandhi-whisper-large-v2.hf.space/")
 
     return whisper_client.predict(
-				audio,	# str (filepath or URL to file) in 'inputs' Audio component
+				audio[1],	# str (filepath or URL to file) in 'inputs' Audio component
 				"transcribe",	# str in 'Task' Radio component
 				api_name="/predict"
     )
@@ -53,7 +53,7 @@ with gr.Blocks(theme=gr.themes.Base()) as demo:
     text = gr.Textbox()
     micro = gr.Microphone()
     micro.stop_recording(transcribe, [micro],[text])
-    gr.ChatInterface(predict,additional_inputs = text, title=title, description=description, css=css, examples=examples) 
+    gr.ChatInterface(predict,textbox = text, title=title, description=description, css=css, examples=examples) 
         
 demo.queue().launch(debug=True)
 
