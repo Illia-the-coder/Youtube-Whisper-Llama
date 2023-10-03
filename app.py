@@ -26,7 +26,7 @@ css = """.toast-wrap { display: none !important } """
 def transcribe(audio):
     whisper_client = Client("https://sanchit-gandhi-whisper-large-v2.hf.space/")
     with open("audio.wav", "wb") as f:
-            f.write(audio)
+            f.write(audio[0])
     return whisper_client.predict(
 				"audio.wav",	# str (filepath or URL to file) in 'inputs' Audio component
 				"transcribe",	# str in 'Task' Radio component
