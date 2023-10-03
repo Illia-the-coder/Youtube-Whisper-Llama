@@ -101,7 +101,7 @@ with gr.Blocks(title=title,theme=gr.themes.Base(),description = description) as 
     with gr.Row():
         gr.Examples(examples, txt_btn)
         
-    clear_btn = gr.ClearButton([chatbot, audio])
+    clear_btn = gr.ClearButton([chatbot])
     
     txt_msg = txt_btn.click(add_text, [chatbot, txt], [chatbot, txt], queue=False).then(
         bot, chatbot, chatbot
