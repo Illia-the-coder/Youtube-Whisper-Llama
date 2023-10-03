@@ -97,11 +97,10 @@ with gr.Blocks(title=title,theme=gr.themes.Base(),description = description) as 
         )
         txt_btn = gr.Button(value="Submit text",scale=1)
         btn = gr.Audio(source="microphone", type="filepath", scale=4)
+    
+    with gr.Row():
         gr.Examples(examples, txt_btn)
         
-    with gr.Row():
-        audio = gr.Audio(type="numpy", streaming=True, autoplay=True, label="Generated audio response", show_label=True)
-
     clear_btn = gr.ClearButton([chatbot, audio])
     
     txt_msg = txt_btn.click(add_text, [chatbot, txt], [chatbot, txt], queue=False).then(
