@@ -99,7 +99,7 @@ with gr.Blocks(title=title,theme=gr.themes.Base(),description = description) as 
         btn = gr.Audio(source="microphone", type="filepath", scale=4)
     
     with gr.Row():
-        Ex = gr.Examples(examples, [txt_btn])
+        Ex = gr.Examples(examples, [txt_btn], [chatbot],fn =add_text )
         
     clear_btn = gr.ClearButton([chatbot])
     
