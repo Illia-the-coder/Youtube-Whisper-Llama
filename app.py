@@ -102,15 +102,11 @@ with gr.Blocks(title=title,theme=gr.themes.Base(),description = description) as 
         txt_btn = gr.Button(value="Submit text",scale=1)
         btn = gr.Audio(source="microphone", type="filepath", scale=4)
     
-    with gr.Row():
-        Ex = gr.Examples(examples, [txt_btn], [chatbot],fn =add_text )
+    # with gr.Row():
+    #     Ex = gr.Examples(examples, [txt_btn], [chatbot],fn =add_text )
         
     clear_btn = gr.ClearButton([chatbot])
     
-    txt_msg = txt_btn.click(add_text, [chatbot, txt], [chatbot, txt], queue=False).then(
-        bot, chatbot, chatbot
-    )
-
     txt_msg = txt.submit(add_text, [chatbot, txt], [chatbot, txt], queue=False).then(
         bot, chatbot, chatbot
     )
