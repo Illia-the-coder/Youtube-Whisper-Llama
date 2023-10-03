@@ -45,5 +45,5 @@ def predict(message, chatbot, system_prompt="", temperature=0.9, max_new_tokens=
 			1,	# int | float (numeric value between 1.0 and 2.0)
 			api_name="/chat_1")
         
-demo = gr.Interface(predict, title=title, inputs="audio", outputs="text", description=description, css=css,theme=gr.themes.Base())#, examples=examples)
+demo = gr.Interface(predict, title=title, inputs="microphone", outputs="text", description=description, css=css,theme=gr.themes.Base())#, examples=examples)
 demo.launch()
