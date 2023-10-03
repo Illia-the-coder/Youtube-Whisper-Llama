@@ -7,6 +7,9 @@ from gradio_client import Client
 title = "Llama2 70B Chatbot"
 description = """
 This Space demonstrates model [Llama-2-70b-chat-hf](https://huggingface.co/meta-llama/Llama-2-70b-chat-hf) by Meta, a Llama 2 model with 70B parameters fine-tuned for chat instructions. 
+It relies on 2 models:
+1. [Whisper-large-v2](https://huggingface.co/spaces/sanchit-gandhi/whisper-large-v2) as an ASR model, to transcribe recorded audio to text. It is called through a [gradio client](https://www.gradio.app/docs/client).
+2. [Llama-2-70b-chat-hf](https://huggingface.co/meta-llama/Llama-2-70b-chat-hf) as the chat model, the actual chat model. It is also called through a [gradio client](https://www.gradio.app/docs/client).
 | Model | Llama2 | Llama2-hf | Llama2-chat | Llama2-chat-hf |
 |---|---|---|---|---|
 | 70B | [Link](https://huggingface.co/meta-llama/Llama-2-70b) | [Link](https://huggingface.co/meta-llama/Llama-2-70b-hf) | [Link](https://huggingface.co/meta-llama/Llama-2-70b-chat) | [Link](https://huggingface.co/meta-llama/Llama-2-70b-chat-hf) |
@@ -76,8 +79,7 @@ def bot(history, system_prompt=""):
     
 
 
-with gr.Blocks(title=title,theme=gr.themes.Base()) as demo:
-    gr.Markdown(DESCRIPTION)
+with gr.Blocks(title=title,theme=gr.themes.Base(),description = description) as demo:
     
     
     chatbot = gr.Chatbot(
@@ -117,11 +119,6 @@ with gr.Blocks(title=title,theme=gr.themes.Base()) as demo:
     )
     
 
-    gr.Markdown("""
-This Space demonstrates how to speak to a chatbot, based solely on open-source models.
-It relies on 3 models:
-1. [Whisper-large-v2](https://huggingface.co/spaces/sanchit-gandhi/whisper-large-v2) as an ASR model, to transcribe recorded audio to text. It is called through a [gradio client](https://www.gradio.app/docs/client).
-2. [Llama-2-70b-chat-hf](https://huggingface.co/meta-llama/Llama-2-70b-chat-hf) as the chat model, the actual chat model. It is also called through a [gradio client](https://www.gradio.app/docs/client).
-""")
+    
 demo.queue()
 demo.launch(debug=True)
