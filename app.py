@@ -104,17 +104,17 @@ with gr.Blocks(title=title) as demo:
     
     txt_msg = txt_btn.click(add_text, [chatbot, txt], [chatbot, txt], queue=False).then(
         bot, chatbot, chatbot
-    ).
+    )
 
     txt_msg = txt.submit(add_text, [chatbot, txt], [chatbot, txt], queue=False).then(
         bot, chatbot, chatbot
-    ).
+    )
     
     txt_msg.then(lambda: gr.update(interactive=True), None, [txt], queue=False)
     
     file_msg = btn.stop_recording(add_file, [chatbot, btn], [chatbot], queue=False).then(
         bot, chatbot, chatbot
-    ).
+    )
     
 
     gr.Markdown("""
