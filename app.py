@@ -107,13 +107,13 @@ with gr.Blocks(title=title,theme=gr.themes.Base(),description = description) as 
         
     clear_btn = gr.ClearButton([chatbot])
     
-    txt_msg = txt.submit(add_text, [chatbot, txt], [chatbot, txt], queue=False).then(
+    txt_msg = txt.submit(add_text, [chatbot, txt], [chatbot, txt]).then(
         bot, chatbot, chatbot
     )
     
-    txt_msg.then(lambda: gr.update(interactive=True), None, [txt], queue=False)
+    txt_msg.then(lambda: gr.update(interactive=True), None, [txt])
     
-    file_msg = btn.stop_recording(add_file, [chatbot, btn], [chatbot], queue=False).then(
+    file_msg = btn.stop_recording(add_file, [chatbot, btn], [chatbot]).then(add_text, chatbot, txt).then(
         bot, chatbot, chatbot
     )
     
