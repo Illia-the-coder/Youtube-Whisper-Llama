@@ -76,7 +76,7 @@ def bot(history, system_prompt=""):
     
 
 
-with gr.Blocks(title=title) as demo:
+with gr.Blocks(title=title,theme=gr.themes.Base()) as demo:
     gr.Markdown(DESCRIPTION)
     
     
