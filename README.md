@@ -1,5 +1,5 @@
 ---
-title: Chat With Llama 2 70b
+title: Chat With Llama 2 70b Voice
 emoji: 🦙
 colorFrom: blue
 colorTo: purple
