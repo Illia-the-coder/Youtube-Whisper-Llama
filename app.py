@@ -44,15 +44,6 @@ def predict(message, chatbot, system_prompt="", temperature=0.9, max_new_tokens=
 			0.3,	# int | float (numeric value between 0.0 and 1)
 			1,	# int | float (numeric value between 1.0 and 2.0)
 			api_name="/chat_1")
-    
-
-
-
-
-# Gradio Demo 
-with gr.Blocks(theme=gr.themes.Base()) as demo:
-    gr.DuplicateButton()
-    gr.ChatInterface(predict, title=title, inputs="image", description=description, css=css, examples=examples) 
-    
         
-demo.queue().launch(debug=True)
+demo = gr.Interface(predict, title=title, inputs="image", description=description, css=css, examples=examples)
+demo.launch(theme=gr.themes.Base())
