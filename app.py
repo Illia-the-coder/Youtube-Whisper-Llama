@@ -21,28 +21,107 @@ examples=[
     ["Write a 100-word article on 'Benefits of Open-Source in AI research'"],
     ]
 
+whisper_client = Client("https://sanchit-gandhi-whisper-large-v2.hf.space/")
+text_client = Client("https://ysharma-explore-llamav2-with-tgi.hf.space/")
 
-# Stream text
-def predict(message, chatbot, system_prompt="", temperature=0.9, max_new_tokens=4096):
+
+def transcribe(wav_path):
     
-    client = Client("https://ysharma-explore-llamav2-with-tgi.hf.space/")
-    return client.predict(
-			message,	# str in 'Message' Textbox component
-            system_prompt,	# str in 'Optional system prompt' Textbox component
-			temperature,	# int | float (numeric value between 0.0 and 1.0)
-			max_new_tokens,	# int | float (numeric value between 0 and 4096)
-			0.3,	# int | float (numeric value between 0.0 and 1)
-			1,	# int | float (numeric value between 1.0 and 2.0)
-			api_name="/chat"
+    return whisper_client.predict(
+				wav_path,	# str (filepath or URL to file) in 'inputs' Audio component
+				"transcribe",	# str in 'Task' Radio component
+				api_name="/predict"
+)
+    
+
+# Chatbot demo with multimodal input (text, markdown, LaTeX, code blocks, image, audio, & video). Plus shows support for streaming text.
+
+
+def add_text(history, text):
+    history = [] if history is None else history
+    history = history + [(text, None)]
+    return history, gr.update(value="", interactive=False)
+
+
+def add_file(history, file):
+    history = [] if history is None else history
+    text = transcribe(
+        file
     )
+    
+    history = history + [(text, None)]
+    return history
+
+
+
+def bot(history, system_prompt=""):    
+    history = [] if history is None else history
+
+    if system_prompt == "":
+        system_prompt = system_message
         
+    history[-1][1] = ""
+    for character in text_client.submit(
+                    history,
+                    system_prompt,
+                    temperature,
+                    4096,
+                    temperature,
+                    repetition_penalty,
+                    api_name="/chat"
+    ):
+        history[-1][1] = character
+        yield history  
+
+    
 
 
+with gr.Blocks(title=title) as demo:
+    gr.Markdown(DESCRIPTION)
+    
+    
+    chatbot = gr.Chatbot(
+        [],
+        elem_id="chatbot",
+        bubble_full_width=False,
+    )
 
-
-# Gradio Demo 
-with gr.Blocks(theme=gr.themes.Base()) as demo:
-    gr.DuplicateButton()
-    gr.ChatInterface(predict, title=title, description=description, css=css, examples=examples) 
+    with gr.Row():
+        txt = gr.Textbox(
+            scale=3,
+            show_label=False,
+            placeholder="Enter text and press enter, or speak to your microphone",
+            container=False,
+        )
+        txt_btn = gr.Button(value="Submit text",scale=1)
+        btn = gr.Audio(source="microphone", type="filepath", scale=4)
+        gradio.Examples(examples, txt_btn)
         
-demo.queue().launch(debug=True)
+    with gr.Row():
+        audio = gr.Audio(type="numpy", streaming=True, autoplay=True, label="Generated audio response", show_label=True)
+
+    clear_btn = gr.ClearButton([chatbot, audio])
+    
+    txt_msg = txt_btn.click(add_text, [chatbot, txt], [chatbot, txt], queue=False).then(
+        bot, chatbot, chatbot
+    ).
+
+    txt_msg = txt.submit(add_text, [chatbot, txt], [chatbot, txt], queue=False).then(
+        bot, chatbot, chatbot
+    ).
+    
+    txt_msg.then(lambda: gr.update(interactive=True), None, [txt], queue=False)
+    
+    file_msg = btn.stop_recording(add_file, [chatbot, btn], [chatbot], queue=False).then(
+        bot, chatbot, chatbot
+    ).
+    
+
+    gr.Markdown("""
+This Space demonstrates how to speak to a chatbot, based solely on open-source models.
+It relies on 3 models:
+1. [Whisper-large-v2](https://huggingface.co/spaces/sanchit-gandhi/whisper-large-v2) as an ASR model, to transcribe recorded audio to text. It is called through a [gradio client](https://www.gradio.app/docs/client).
+2. [Llama-2-70b-chat-hf](https://huggingface.co/meta-llama/Llama-2-70b-chat-hf) as the chat model, the actual chat model. It is also called through a [gradio client](https://www.gradio.app/docs/client).
+""")
+demo.queue()
+demo.launch(debug=True)
