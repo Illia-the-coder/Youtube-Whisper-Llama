@@ -113,7 +113,7 @@ with gr.Blocks(title=title,theme=gr.themes.Base(),description = description) as 
     
     txt_msg.then(lambda: gr.update(interactive=True), None, [txt])
     
-    file_msg = btn.stop_recording(add_file, [chatbot, btn], [chatbot]).then(add_text, chatbot, txt).then(
+    file_msg = btn.stop_recording(add_file, [chatbot, btn], [chatbot]).then(
         bot, chatbot, chatbot
     )
     
