@@ -53,7 +53,7 @@ with gr.Blocks(theme=gr.themes.Base()) as demo:
     text = gr.Textbox()
     micro = gr.Microphone()
     micro.stop_recording(transcribe, [micro],[text])
-    gr.ChatInterface(predict,text, title=title, description=description, css=css, examples=examples) 
+    gr.ChatInterface(predict,additional_inputs = text, title=title, description=description, css=css, examples=examples) 
         
 demo.queue().launch(debug=True)
 
