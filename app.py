@@ -66,4 +66,4 @@ interface = gr.Interface(
     description=description
 )
 
-interface.launch()
+interface.launch(share=True)
