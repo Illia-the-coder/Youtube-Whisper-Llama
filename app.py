@@ -32,38 +32,16 @@ def predict(message, chatbot, system_prompt="", temperature=0.9, max_new_tokens=
 			max_new_tokens,	# int | float (numeric value between 0 and 4096)
 			0.3,	# int | float (numeric value between 0.0 and 1)
 			1,	# int | float (numeric value between 1.0 and 2.0)
-			api_name="/chat"
+			api_name="/chat_1"
     )
         
 
 
-def transcribe(audio):
-    whisper_client = Client("https://sanchit-gandhi-whisper-large-v2.hf.space/")
 
-    return whisper_client.predict(
-				audio[1],	# str (filepath or URL to file) in 'inputs' Audio component
-				"transcribe",	# str in 'Task' Radio component
-				api_name="/predict"
-    )
-    
-def app_interface(input_type, message="", audio=None):
-    if input_type == "Text":
-        return predict(message)
-    elif input_type == "Audio":
-        transcribed_message = transcribe(audio.name)
-        return predict(transcribed_message)
 
-interface = gr.Interface(
-    fn=app_interface,
-    inputs=[
-        gr.Radio(["Text", "Audio"], label="Input Type"),
-        gr.Textbox(label="Message (if text selected)"),
-        gr.Microphone(label="Record (if audio selected)")
-    ],
-    outputs="text",
-    live=True,
-    title=title,
-    description=description
-)
-
-interface.launch()
+# Gradio Demo 
+with gr.Blocks(theme=gr.themes.Base()) as demo:
+    gr.DuplicateButton()
+    gr.ChatInterface(predict, title=title, description=description, css=css, examples=examples) 
+        
+demo.queue().launch(debug=True)
