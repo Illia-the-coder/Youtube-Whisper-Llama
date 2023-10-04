@@ -48,7 +48,7 @@ additional_inputs=[
     ),
     gr.Slider(
         label="Max new tokens",
-        value=256,
+        value=4096,
         minimum=0,
         maximum=4096,
         step=64,
