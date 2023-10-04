@@ -58,7 +58,7 @@ interface = gr.Interface(
     inputs=[
         gr.Radio(["Text", "Audio"], label="Input Type"),
         gr.Textbox(label="Message (if text selected)"),
-        gr.Audio(label="Record (if audio selected)", type="file")
+        gr.Microphone(label="Record (if audio selected)")
     ],
     outputs="text",
     live=True,
