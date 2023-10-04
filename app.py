@@ -62,8 +62,8 @@ interface = gr.Interface(
     ],
     outputs="text",
     live=True,
-    title=TITLE,
-    description=DESCRIPTION
+    title=title,
+    description=description
 )
 
 interface.launch()
