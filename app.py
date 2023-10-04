@@ -45,17 +45,25 @@ def transcribe(audio):
 				"transcribe",	# str in 'Task' Radio component
 				api_name="/predict"
     )
+    
+def app_interface(input_type, message="", audio=None):
+    if input_type == "Text":
+        return predict(message)
+    elif input_type == "Audio":
+        transcribed_message = transcribe(audio.name)
+        return predict(transcribed_message)
 
+interface = gr.Interface(
+    fn=app_interface,
+    inputs=[
+        gr.Radio(["Text", "Audio"], label="Input Type"),
+        gr.Textbox(label="Message (if text selected)"),
+        gr.Audio(label="Record (if audio selected)", type="file")
+    ],
+    outputs="text",
+    live=True,
+    title=TITLE,
+    description=DESCRIPTION
+)
 
-# Gradio Demo 
-with gr.Blocks(theme=gr.themes.Base()) as demo:
-    gr.DuplicateButton()
-    text = gr.Textbox()
-    micro = gr.Microphone()
-    micro.stop_recording(transcribe, [micro],[text])
-    gr.ChatInterface(predict,textbox = text, title=title, description=description, css=css, examples=examples) 
-        
-demo.queue().launch(debug=True)
-
-
-
+interface.launch()
