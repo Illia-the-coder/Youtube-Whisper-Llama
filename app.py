@@ -1,9 +1,6 @@
 import gradio as gr
 from gradio_client import Client
 
-
-
-
 title = "Llama2 70B Chatbot"
 description = """
 This Space demonstrates model [Llama-2-70b-chat-hf](https://huggingface.co/meta-llama/Llama-2-70b-chat-hf) by Meta, a Llama 2 model with 70B parameters fine-tuned for chat instructions. 
