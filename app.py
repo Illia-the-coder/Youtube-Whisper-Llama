@@ -97,10 +97,6 @@ def sidebar():
         )
         st.session_state.youtube_url = st.text_input("YouTube Video URL:")
 
-st.set_page_config(page_title="YouTube Video Chatbot",
-                   layout="centered",
-                   initial_sidebar_state="expanded")
-
 st.title("YouTube Video Chatbot")
 sidebar()
 initialize_session_state()
