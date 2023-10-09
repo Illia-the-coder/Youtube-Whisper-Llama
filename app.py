@@ -1,82 +1,150 @@
-import gradio as gr
-from gradio_client import Client
+import os
+import logging
+from typing import Any, List, Mapping, Optional
 
-title = "Llama2 70B Chatbot"
-description = """
-This Space demonstrates model [Llama-2-70b-chat-hf](https://huggingface.co/meta-llama/Llama-2-70b-chat-hf) by Meta, a Llama 2 model with 70B parameters fine-tuned for chat instructions. 
-| Model | Llama2 | Llama2-hf | Llama2-chat | Llama2-chat-hf |
+from gradio_client import Client
+from langchain.schema import Document
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain.vectorstores import FAISS
+from langchain.embeddings.huggingface import HuggingFaceEmbeddings
+from langchain.callbacks.manager import CallbackManagerForLLMRun
+from langchain.llms.base import LLM
+from langchain.chains import RetrievalQA
+import streamlit as st
+
+models = '''| Model | Llama2 | Llama2-hf | Llama2-chat | Llama2-chat-hf |
 |---|---|---|---|---|
 | 70B | [Link](https://huggingface.co/meta-llama/Llama-2-70b) | [Link](https://huggingface.co/meta-llama/Llama-2-70b-hf) | [Link](https://huggingface.co/meta-llama/Llama-2-70b-chat) | [Link](https://huggingface.co/meta-llama/Llama-2-70b-chat-hf) |
+---'''
+
+
+DESCRIPTION = """
+Welcome to the **YouTube Video Chatbot** powered by the state-of-the-art Llama-2-70b model. Here's what you can do:
+
+- **Transcribe & Understand**: Provide any YouTube video URL, and our system will transcribe it. Our advanced NLP model will then understand the content, ready to answer your questions.
+- **Ask Anything**: Based on the video's content, ask any question, and get instant, context-aware answers.
+- **Deep Dive**: Our model doesn't just provide generic answers. It understands the context, nuances, and details from the video.
+- **Safe & Private**: We value your privacy. The videos you provide are only used for transcription and are not stored or used for any other purpose.
+
+To get started, simply paste a YouTube video URL in the sidebar and start chatting with the model about the video's content. Enjoy the experience!
 """
-css = """.toast-wrap { display: none !important } """
-examples=[
-    ['Hello there! How are you doing?'],
-    ['Can you explain to me briefly what is Python programming language?'],
-    ['Explain the plot of Cinderella in a sentence.'],
-    ['How many hours does it take a man to eat a Helicopter?'],
-    ["Write a 100-word article on 'Benefits of Open-Source in AI research'"],
-    ]
+
+st.markdown(DESCRIPTION)
 
 
-# Stream text
-def predict(message, chatbot, system_prompt="", temperature=0.9, max_new_tokens=4096, top_p=0.6, repetition_penalty=1.0,):
-    
+def transcribe_video(youtube_url: str, path: str) -> List[Document]:
+    """
+    Transcribe a video and return its content as a Document.
+    """
+    logging.info(f"Transcribing video: {youtube_url}")
+    client = Client("https://sanchit-gandhi-whisper-jax.hf.space/")
+    result = client.predict(youtube_url, "translate", True, fn_index=7)
+    return [Document(page_content=result[1], metadata=dict(page=1))]
+
+
+def predict(message: str, system_prompt: str = '', temperature: float = 0.7, max_new_tokens: int = 4096,
+            topp: float = 0.5, repetition_penalty: float = 1.2) -> Any:
+    """
+    Predict a response using a client.
+    """
     client = Client("https://ysharma-explore-llamav2-with-tgi.hf.space/")
-    return client.predict(
-			message,	# str in 'Message' Textbox component
-            system_prompt,	# str in 'Optional system prompt' Textbox component
-			temperature,	# int | float (numeric value between 0.0 and 1.0)
-			max_new_tokens,	# int | float (numeric value between 0 and 4096)
-			0.3,	# int | float (numeric value between 0.0 and 1)
-			1,	# int | float (numeric value between 1.0 and 2.0)
-			api_name="/chat_1"
+    response = client.predict(
+        message,
+        system_prompt,
+        temperature,
+        max_new_tokens,
+        topp,
+        repetition_penalty,
+        api_name="/chat_1"
     )
-        
-additional_inputs=[
-    gr.Textbox("", label="Optional system prompt"),
-    gr.Slider(
-        label="Temperature",
-        value=0.9,
-        minimum=0.0,
-        maximum=1.0,
-        step=0.05,
-        interactive=True,
-        info="Higher values produce more diverse outputs",
-    ),
-    gr.Slider(
-        label="Max new tokens",
-        value=4096,
-        minimum=0,
-        maximum=4096,
-        step=64,
-        interactive=True,
-        info="The maximum numbers of new tokens",
-    ),
-    gr.Slider(
-        label="Top-p (nucleus sampling)",
-        value=0.6,
-        minimum=0.0,
-        maximum=1,
-        step=0.05,
-        interactive=True,
-        info="Higher values sample more low-probability tokens",
-    ),
-    gr.Slider(
-        label="Repetition penalty",
-        value=1.2,
-        minimum=1.0,
-        maximum=2.0,
-        step=0.05,
-        interactive=True,
-        info="Penalize repeated tokens",
-    )
-]
+    return response
 
 
+class LlamaLLM(LLM):
+    """
+    Custom LLM class.
+    """
 
-# Gradio Demo 
-with gr.Blocks(theme=gr.themes.Base()) as demo:
-    gr.DuplicateButton()
-    gr.ChatInterface(predict, title=title,additional_inputs=additional_inputs, description=description, css=css, examples=examples) 
-        
-demo.queue().launch(debug=True)
+    @property
+    def _llm_type(self) -> str:
+        return "custom"
+
+    def _call(self, prompt: str, stop: Optional[List[str]] = None,
+              run_manager: Optional[CallbackManagerForLLMRun] = None) -> str:
+        response = predict(prompt)
+        return response
+
+    @property
+    def _identifying_params(self) -> Mapping[str, Any]:
+        """Get the identifying parameters."""
+        return {}
+
+PATH = os.path.join(os.path.expanduser("~"), "Data")
+
+def initialize_session_state():
+    if "youtube_url" not in st.session_state:
+        st.session_state.youtube_url = ""
+    if "setup_done" not in st.session_state:  # Initialize the setup_done flag
+        st.session_state.setup_done = False
+    if "doneYoutubeurl" not in st.session_state:
+        st.session_state.doneYoutubeurl = ""
+
+def sidebar():
+    with st.sidebar:
+        st.markdown(
+            "## How to use\n"
+            "1. Enter the YouTube Video URL below🔗\n"
+        )
+        st.session_state.youtube_url = st.text_input("YouTube Video URL:")
+
+st.set_page_config(page_title="YouTube Video Chatbot",
+                   layout="centered",
+                   initial_sidebar_state="expanded")
+
+st.title("YouTube Video Chatbot")
+sidebar()
+initialize_session_state()
+
+# Check if a new YouTube URL is provided
+if st.session_state.youtube_url != st.session_state.doneYoutubeurl:
+    st.session_state.setup_done = False
+
+if st.session_state.youtube_url and not st.session_state.setup_done:
+    with st.status("Transcribing video..."):
+      data = transcribe_video(st.session_state.youtube_url, PATH)
+    
+    with st.status("Running Embeddings..."):
+      text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+      docs = text_splitter.split_documents(data)
+
+      embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-l6-v2")
+      docsearch = FAISS.from_documents(docs, embeddings)
+      retriever = docsearch.as_retriever()
+      retriever.search_kwargs['distance_metric'] = 'cos'
+      retriever.search_kwargs['k'] = 4
+    with st.status("Running RetrievalQA..."):
+      llama_instance = LlamaLLM()
+      st.session_state.qa = RetrievalQA.from_chain_type(llm=llama_instance, chain_type="stuff", retriever=retriever)
+    st.session_state.doneYoutubeurl = st.session_state.youtube_url
+
+    st.session_state.doneYoutubeurl = st.session_state.youtube_url
+    st.session_state.setup_done = True  # Mark the setup as done for this URL
+
+if "messages" not in st.session_state:
+  st.session_state.messages = []
+
+for message in st.session_state.messages:
+    with st.chat_message(message["role"], avatar=("🧑‍💻" if message["role"] == 'human' else '🦙')):
+        st.markdown(message["content"])
+
+textinput = st.chat_input("Ask LLama-2-70b anything about the video...") 
+
+if prompt := textinput:
+  st.chat_message("human",avatar = "🧑‍💻").markdown(prompt)
+  st.session_state.messages.append({"role": "human", "content": prompt})
+  with st.status("Requesting Client..."):
+      response = st.session_state.qa.run(prompt)
+  with st.chat_message("assistant", avatar='🦙'):
+      st.markdown(response)
+  # Add assistant response to chat history
+  st.session_state.messages.append({"role": "assistant", "content": response})
