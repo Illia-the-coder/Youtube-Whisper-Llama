@@ -23,8 +23,6 @@ Welcome to the **YouTube Video Chatbot** powered by the state-of-the-art Llama-2
 
 - **Transcribe & Understand**: Provide any YouTube video URL, and our system will transcribe it. Our advanced NLP model will then understand the content, ready to answer your questions.
 - **Ask Anything**: Based on the video's content, ask any question, and get instant, context-aware answers.
-- **Deep Dive**: Our model doesn't just provide generic answers. It understands the context, nuances, and details from the video.
-- **Safe & Private**: We value your privacy. The videos you provide are only used for transcription and are not stored or used for any other purpose.
 
 To get started, simply paste a YouTube video URL in the sidebar and start chatting with the model about the video's content. Enjoy the experience!
 """
@@ -92,8 +90,7 @@ def initialize_session_state():
 def sidebar():
     with st.sidebar:
         st.markdown(
-            "## How to use\n"
-            "1. Enter the YouTube Video URL below🔗\n"
+            "Enter the YouTube Video URL below🔗\n"
         )
         st.session_state.youtube_url = st.text_input("YouTube Video URL:")
 
