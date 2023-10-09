@@ -1,8 +1,8 @@
 ---
 title: Chat With Llama 2 70b Voice
-emoji: ⚡
+emoji: 🦙
 colorFrom: indigo
-colorTo: pink
+colorTo: blue
 sdk: streamlit
 sdk_version: 3.44.3
 app_file: app.py
