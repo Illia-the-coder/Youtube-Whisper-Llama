@@ -26,7 +26,7 @@ Welcome to the **YouTube Video Chatbot** powered by the state-of-the-art Llama-2
 
 To get started, simply paste a YouTube video URL in the sidebar and start chatting with the model about the video's content. Enjoy the experience!
 """
-
+st.title("YouTube Video Chatbot")
 st.markdown(DESCRIPTION)
 
 
@@ -94,7 +94,7 @@ def sidebar():
         )
         st.session_state.youtube_url = st.text_input("YouTube Video URL:")
 
-st.title("YouTube Video Chatbot")
+
 sidebar()
 initialize_session_state()
 
