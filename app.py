@@ -94,7 +94,6 @@ def initialize_session_state():
         st.session_state.doneYoutubeurl = ""
 
 def sidebar():
-    def sidebar():
     with st.sidebar:
         st.markdown("Enter the YouTube Video URL below🔗\n")
         st.session_state.youtube_url = st.text_input("YouTube Video URL:")
@@ -106,9 +105,10 @@ def sidebar():
 
             # Embed the video
             st.markdown(
-                f'<iframe min-width="300" min-height="200" src="{st.session_state.youtube_url.replace("watch?v=", "embed/")}" frameborder="0" allowfullscreen></iframe>',
+                f'<iframe width="300" height="200" src="{st.session_state.youtube_url.replace("watch?v=", "embed/")}" frameborder="0" allowfullscreen></iframe>',
                 unsafe_allow_html=True
             )
+
 
 
 
