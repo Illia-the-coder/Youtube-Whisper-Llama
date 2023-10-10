@@ -34,7 +34,10 @@ st.markdown(DESCRIPTION)
 
 def get_video_title(youtube_url: str) -> str:
     yt = YouTube(youtube_url)
-    return yt.title
+    embed_url = f"https://www.youtube.com/embed/{yt.video_id}"
+    embed_html = f'<iframe width="560" height="315" src="{embed_url}" frameborder="0" allowfullscreen></iframe>'
+    return yt.title, embed_html
+
 
 def transcribe_video(youtube_url: str, path: str) -> List[Document]:
     """
@@ -100,12 +103,12 @@ def sidebar():
 
         if st.session_state.youtube_url:
             # Get the video title
-            video_title = get_video_title(st.session_state.youtube_url)
+            video_title, embed_html = get_video_title(st.session_state.youtube_url)
             st.markdown(f"### {video_title}")
 
             # Embed the video
             st.markdown(
-                f'<iframe width="300" height="200" src="{st.session_state.youtube_url.replace("watch?v=", "embed/")}" frameborder="0" allowfullscreen></iframe>',
+                embed_html,
                 unsafe_allow_html=True
             )
 
