@@ -11,6 +11,9 @@ from langchain.callbacks.manager import CallbackManagerForLLMRun
 from langchain.llms.base import LLM
 from langchain.chains import RetrievalQA
 import streamlit as st
+from pytube import YouTube
+
+
 
 models = '''| Model | Llama2 | Llama2-hf | Llama2-chat | Llama2-chat-hf |
 |---|---|---|---|---|
@@ -29,6 +32,9 @@ To get started, simply paste a YouTube video URL in the sidebar and start chatti
 st.title("YouTube Video Chatbot")
 st.markdown(DESCRIPTION)
 
+def get_video_title(youtube_url: str) -> str:
+    yt = YouTube(youtube_url)
+    return yt.title
 
 def transcribe_video(youtube_url: str, path: str) -> List[Document]:
     """
@@ -88,11 +94,22 @@ def initialize_session_state():
         st.session_state.doneYoutubeurl = ""
 
 def sidebar():
+    def sidebar():
     with st.sidebar:
-        st.markdown(
-            "Enter the YouTube Video URL below🔗\n"
-        )
+        st.markdown("Enter the YouTube Video URL below🔗\n")
         st.session_state.youtube_url = st.text_input("YouTube Video URL:")
+
+        if st.session_state.youtube_url:
+            # Get the video title
+            video_title = get_video_title(st.session_state.youtube_url)
+            st.markdown(f"### {video_title}")
+
+            # Embed the video
+            st.markdown(
+                f'<iframe min-width="300" min-height="200" src="{st.session_state.youtube_url.replace("watch?v=", "embed/")}" frameborder="0" allowfullscreen></iframe>',
+                unsafe_allow_html=True
+            )
+
 
 
 sidebar()
