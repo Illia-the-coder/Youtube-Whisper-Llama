@@ -98,11 +98,11 @@ def sidebar():
                 unsafe_allow_html=True
             )
             
-        system_promptSide = st.text_input("Optional system prompt:")
+        # system_promptSide = st.text_input("Optional system prompt:")
         temperatureSide = st.slider("Temperature", min_value=0.0, max_value=1.0, value=0.9, step=0.05)
         max_new_tokensSide = st.slider("Max new tokens", min_value=0.0, max_value=4096.0, value=4096.0, step=64.0)
-        ToppSide = st.slider("Top-p (nucleus sampling)", min_value=0.0, max_value=1.0, value=0.6, step=0.05)
-        RepetitionpenaltySide = st.slider("Repetition penalty", min_value=0.0, max_value=2.0, value=1.2, step=0.05)
+        # ToppSide = st.slider("Top-p (nucleus sampling)", min_value=0.0, max_value=1.0, value=0.6, step=0.05)
+        # RepetitionpenaltySide = st.slider("Repetition penalty", min_value=0.0, max_value=2.0, value=1.2, step=0.05)
 
 
 def predict(message: str) -> Any:
@@ -112,11 +112,11 @@ def predict(message: str) -> Any:
     client = Client("https://ysharma-explore-llamav2-with-tgi.hf.space/")
     response = client.predict(
         message,
-        system_promptSide,
+        '',
         temperatureSide,
         max_new_tokensSide,
-        toppSide,
-        repetition_penaltySide,
+        0.6,
+        1.2,
         api_name="/chat_1"
     )
     return response
