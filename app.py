@@ -113,8 +113,8 @@ def predict(message: str) -> Any:
     response = client.predict(
         message,
         '',
-        temperatureSide,
-        max_new_tokensSide,
+        (temperatureSide or 0.9),
+        (max_new_tokensSide or 4096),
         0.6,
         1.2,
         api_name="/chat_1"
