@@ -49,8 +49,8 @@ def transcribe_video(youtube_url: str, path: str) -> List[Document]:
     return [Document(page_content=result[1], metadata=dict(page=1))]
 
 
-def predict(message: str, system_prompt: str = '', temperature: float = 0.7, max_new_tokens: int = 4096,
-            topp: float = 0.5, repetition_penalty: float = 1.2) -> Any:
+def predict(message: str, system_prompt: str = system_promptSide, temperature: float = temperatureSide, max_new_tokens: int = max_new_tokensSide,
+            topp: float = ToppSide, repetition_penalty: float = RepetitionpenaltySide) -> Any:
     """
     Predict a response using a client.
     """
@@ -111,12 +111,21 @@ def sidebar():
                 embed_html,
                 unsafe_allow_html=True
             )
+            
+    system_promptSide = st.text_input("Optional system prompt:")
+    temperatureSide = st.slider("Temperature", min_value=0.0, max_value=1.0, value=0.9, step=0.05)
+    max_new_tokensSide = st.slider("Max new tokens", min_value=0.0, max_value=4096.0, value=4096.0, step=64.0)
+    ToppSide = st.slider("Top-p (nucleus sampling)", min_value=0.0, max_value=1.0, value=0.6, step=0.05)
+    RepetitionpenaltySide = st.slider("Repetition penalty", min_value=0.0, max_value=2.0, value=1.2, step=0.05)
 
 
 
 
 sidebar()
 initialize_session_state()
+
+text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-l6-v2")
 
 # Check if a new YouTube URL is provided
 if st.session_state.youtube_url != st.session_state.doneYoutubeurl:
@@ -127,10 +136,8 @@ if st.session_state.youtube_url and not st.session_state.setup_done:
       data = transcribe_video(st.session_state.youtube_url, PATH)
     
     with st.status("Running Embeddings..."):
-      text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
       docs = text_splitter.split_documents(data)
 
-      embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-l6-v2")
       docsearch = FAISS.from_documents(docs, embeddings)
       retriever = docsearch.as_retriever()
       retriever.search_kwargs['distance_metric'] = 'cos'
@@ -138,8 +145,7 @@ if st.session_state.youtube_url and not st.session_state.setup_done:
     with st.status("Running RetrievalQA..."):
       llama_instance = LlamaLLM()
       st.session_state.qa = RetrievalQA.from_chain_type(llm=llama_instance, chain_type="stuff", retriever=retriever)
-    st.session_state.doneYoutubeurl = st.session_state.youtube_url
-
+        
     st.session_state.doneYoutubeurl = st.session_state.youtube_url
     st.session_state.setup_done = True  # Mark the setup as done for this URL
 
