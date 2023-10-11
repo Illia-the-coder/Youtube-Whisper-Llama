@@ -10,6 +10,7 @@ from langchain.embeddings.huggingface import HuggingFaceEmbeddings
 from langchain.callbacks.manager import CallbackManagerForLLMRun
 from langchain.llms.base import LLM
 from langchain.chains import RetrievalQA
+from langchain.prompts import PromptTemplate
 import streamlit as st
 from pytube import YouTube
 
@@ -126,6 +127,14 @@ initialize_session_state()
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
 embeddings = HuggingFaceEmbeddings(model_name="sentence-transformers/all-MiniLM-l6-v2")
 
+prompt = PromptTemplate(
+    template="""Given the context about a video. Answer the user in a friendly and precise manner.
+    Context: {context}
+    Human: {question}
+    AI:""",
+    input_variables=["context", "question"]
+)
+
 # Check if a new YouTube URL is provided
 if st.session_state.youtube_url != st.session_state.doneYoutubeurl:
     st.session_state.setup_done = False
@@ -143,7 +152,7 @@ if st.session_state.youtube_url and not st.session_state.setup_done:
       retriever.search_kwargs['k'] = 4
     with st.status("Running RetrievalQA..."):
       llama_instance = LlamaLLM()
-      st.session_state.qa = RetrievalQA.from_chain_type(llm=llama_instance, chain_type="stuff", retriever=retriever)
+      st.session_state.qa = RetrievalQA.from_chain_type(llm=llama_instance, chain_type="stuff", retriever=retriever,return_source_documents=True,chain_type_kwargs={"prompt": prompt})
         
     st.session_state.doneYoutubeurl = st.session_state.youtube_url
     st.session_state.setup_done = True  # Mark the setup as done for this URL
