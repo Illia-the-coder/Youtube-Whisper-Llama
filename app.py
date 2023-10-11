@@ -49,22 +49,7 @@ def transcribe_video(youtube_url: str, path: str) -> List[Document]:
     return [Document(page_content=result[1], metadata=dict(page=1))]
 
 
-def predict(message: str, system_prompt: str = system_promptSide, temperature: float = temperatureSide, max_new_tokens: int = max_new_tokensSide,
-            topp: float = ToppSide, repetition_penalty: float = RepetitionpenaltySide) -> Any:
-    """
-    Predict a response using a client.
-    """
-    client = Client("https://ysharma-explore-llamav2-with-tgi.hf.space/")
-    response = client.predict(
-        message,
-        system_prompt,
-        temperature,
-        max_new_tokens,
-        topp,
-        repetition_penalty,
-        api_name="/chat_1"
-    )
-    return response
+
 
 
 class LlamaLLM(LLM):
@@ -119,7 +104,22 @@ def sidebar():
     RepetitionpenaltySide = st.slider("Repetition penalty", min_value=0.0, max_value=2.0, value=1.2, step=0.05)
 
 
-
+def predict(message: str, system_prompt: str = system_promptSide, temperature: float = temperatureSide, max_new_tokens: int = max_new_tokensSide,
+            topp: float = ToppSide, repetition_penalty: float = RepetitionpenaltySide) -> Any:
+    """
+    Predict a response using a client.
+    """
+    client = Client("https://ysharma-explore-llamav2-with-tgi.hf.space/")
+    response = client.predict(
+        message,
+        system_prompt,
+        temperature,
+        max_new_tokens,
+        topp,
+        repetition_penalty,
+        api_name="/chat_1"
+    )
+    return response
 
 sidebar()
 initialize_session_state()
