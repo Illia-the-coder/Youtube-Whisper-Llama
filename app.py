@@ -173,6 +173,6 @@ if prompt := textinput:
       response = st.session_state.qa(
                 {"query": prompt})
   with st.chat_message("assistant", avatar='🦙'):
-      st.markdown(response["result"]+'\n'+response["source_documents"])
+      st.markdown(str(response["result"])+'\n'+str(response["source_documents"]))
   # Add assistant response to chat history
   st.session_state.messages.append({"role": "assistant", "content": response})
