@@ -170,8 +170,9 @@ if prompt := textinput:
   st.chat_message("human",avatar = "🧑‍💻").markdown(prompt)
   st.session_state.messages.append({"role": "human", "content": prompt})
   with st.status("Requesting Client..."):
-      response = st.session_state.qa.run(prompt)
+      response = st.session_state.qa(
+                {"query": prompt})
   with st.chat_message("assistant", avatar='🦙'):
-      st.markdown(response)
+      st.markdown(response["result"]+'\n'+response["source_documents"])
   # Add assistant response to chat history
   st.session_state.messages.append({"role": "assistant", "content": response})
