@@ -50,7 +50,22 @@ def transcribe_video(youtube_url: str, path: str) -> List[Document]:
     result = client.predict(youtube_url, "translate", True, fn_index=7)
     return [Document(page_content=result[1], metadata=dict(page=1))]
 
-
+def predict(message: str, system_prompt: str = '', temperature: float = 0.7, max_new_tokens: int = 4096,
+            topp: float = 0.5, repetition_penalty: float = 1.2) -> Any:
+    """
+    Predict a response using a client.
+    """
+    client = Client("https://ysharma-explore-llamav2-with-tgi.hf.space/--replicas/xwjz8/")
+    response = client.predict(
+        message,
+        system_prompt,
+        temperature,
+        max_new_tokens,
+        topp,
+        repetition_penalty,
+        api_name="/chat_1"
+    )
+    return response
 
 PATH = os.path.join(os.path.expanduser("~"), "Data")
 
@@ -100,6 +115,26 @@ prompt = PromptTemplate(
     input_variables=["context", "question"]
 )
 
+class LlamaLLM(LLM):
+    """
+    Custom LLM class.
+    """
+
+    @property
+    def _llm_type(self) -> str:
+        return "custom"
+
+    def _call(self, prompt: str, stop: Optional[List[str]] = None,
+              run_manager: Optional[CallbackManagerForLLMRun] = None) -> str:
+        response = predict(prompt)
+        return response
+
+    @property
+    def _identifying_params(self) -> Mapping[str, Any]:
+        """Get the identifying parameters."""
+        return {}
+
+
 # Check if a new YouTube URL is provided
 if st.session_state.youtube_url != st.session_state.doneYoutubeurl:
     st.session_state.setup_done = False
@@ -116,11 +151,7 @@ if st.session_state.youtube_url and not st.session_state.setup_done :
       retriever.search_kwargs['distance_metric'] = 'cos'
       retriever.search_kwargs['k'] = 4
     with st.status("Running RetrievalQA..."):
-      llama_instance = HuggingFaceHub(
-            model_kwargs={"max_length": 4096},
-            repo_id="meta-llama/Llama-2-70b-chat-hf",
-            huggingfacehub_api_token=os.environ["HUGGINGFACEHUB_API_TOKEN"],
-        )
+      llama_instance = LlamaLLM()
       st.session_state.qa = RetrievalQA.from_chain_type(llm=llama_instance, chain_type="stuff", retriever=retriever,chain_type_kwargs={"prompt": prompt})
         
     st.session_state.doneYoutubeurl = st.session_state.youtube_url
