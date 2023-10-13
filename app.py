@@ -66,10 +66,7 @@ def sidebar():
     with st.sidebar:
         st.markdown("Enter the YouTube Video URL below🔗\n")
         st.session_state.youtube_url = st.text_input("YouTube Video URL:")
-        
-        # REPLICATE_API_TOKEN = st.text_input("REPLICATE API TOKEN:", type="password")  # Using type="password" to mask the input
-        # if REPLICATE_API_TOKEN:
-        #     os.environ["REPLICATE_API_TOKEN"] = REPLICATE_API_TOKEN
+
 
         if st.session_state.youtube_url:
             # Get the video title
@@ -107,7 +104,7 @@ prompt = PromptTemplate(
 if st.session_state.youtube_url != st.session_state.doneYoutubeurl:
     st.session_state.setup_done = False
 
-if st.session_state.youtube_url and not st.session_state.setup_done and "REPLICATE_API_TOKEN" in os.environ:
+if st.session_state.youtube_url and not st.session_state.setup_done :
     with st.status("Transcribing video..."):
       data = transcribe_video(st.session_state.youtube_url, PATH)
     
