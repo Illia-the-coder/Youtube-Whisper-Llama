@@ -1,7 +1,7 @@
 import os
 import logging
 from typing import Any, List, Mapping, Optional
-
+from langchain.llms import HuggingFaceHub
 from gradio_client import Client
 from langchain.schema import Document
 from langchain.text_splitter import RecursiveCharacterTextSplitter
@@ -13,7 +13,7 @@ from langchain.chains import RetrievalQA
 from langchain.prompts import PromptTemplate
 import streamlit as st
 from pytube import YouTube
-import replicate
+# import replicate
 
 
 
@@ -89,7 +89,6 @@ def sidebar():
         # RepetitionpenaltySide = st.slider("Repetition penalty", min_value=0.0, max_value=2.0, value=1.2, step=0.05)
 
 
-
 sidebar()
 initialize_session_state()
 
@@ -120,9 +119,10 @@ if st.session_state.youtube_url and not st.session_state.setup_done and "REPLICA
       retriever.search_kwargs['distance_metric'] = 'cos'
       retriever.search_kwargs['k'] = 4
     with st.status("Running RetrievalQA..."):
-      llama_instance = replicate.load(
-            model="meta/llama-2-70b-chat:02e509c789964a7ea8736978a43525956ef40397be9033abf9fd2badfe68c9e3",
-            model_kwargs={"temperature": 0.75, "max_length": 4096, "top_p": 1},
+      llama_instance = HuggingFaceHub(
+            model_kwargs={"max_length": 4096},
+            repo_id="meta-llama/Llama-2-70b-chat-hf",
+            huggingfacehub_api_token=os.environ["HUGGINGFACEHUB_API_TOKEN"],
         )
       st.session_state.qa = RetrievalQA.from_chain_type(llm=llama_instance, chain_type="stuff", retriever=retriever,chain_type_kwargs={"prompt": prompt})
         
