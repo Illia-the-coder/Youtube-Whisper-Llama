@@ -67,9 +67,9 @@ def sidebar():
         st.markdown("Enter the YouTube Video URL below🔗\n")
         st.session_state.youtube_url = st.text_input("YouTube Video URL:")
         
-        REPLICATE_API_TOKEN = st.text_input("REPLICATE API TOKEN:", type="password")  # Using type="password" to mask the input
-        if REPLICATE_API_TOKEN:
-            os.environ["REPLICATE_API_TOKEN"] = REPLICATE_API_TOKEN
+        # REPLICATE_API_TOKEN = st.text_input("REPLICATE API TOKEN:", type="password")  # Using type="password" to mask the input
+        # if REPLICATE_API_TOKEN:
+        #     os.environ["REPLICATE_API_TOKEN"] = REPLICATE_API_TOKEN
 
         if st.session_state.youtube_url:
             # Get the video title
