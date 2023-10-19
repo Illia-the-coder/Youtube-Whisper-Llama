@@ -3,4 +3,3 @@ langchain
 sentence-transformers
 faiss-cpu
 pytube
-replicate
