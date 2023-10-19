@@ -170,7 +170,10 @@ if prompt := textinput:
   st.chat_message("human",avatar = "🧑‍💻").markdown(prompt)
   st.session_state.messages.append({"role": "human", "content": prompt})
   with st.status("Requesting Client..."):
-      response = st.session_state.qa.run(prompt)
+    video_title, _ = get_video_title(st.session_state.youtube_url)
+    timestamp = "00:00"  # You can modify this to get the actual timestamp if needed
+    additional_context = f"Given the context about a video titled '{video_title}' available at '{st.session_state.youtube_url}' (starting from timestamp '{timestamp}')."
+    response = st.session_state.qa.run( prompt+ " " + additional_context)
   with st.chat_message("assistant", avatar='🦙'):
       st.markdown(response)
   # Add assistant response to chat history
