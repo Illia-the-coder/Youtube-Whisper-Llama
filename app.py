@@ -55,7 +55,7 @@ def predict(message: str, system_prompt: str = '', temperature: float = 0.7, max
     """
     Predict a response using a client.
     """
-    client = Client("https://ysharma-explore-llamav2-with-tgi.hf.space/--replicas/xwjz8/")
+    client = Client("https://ysharma-explore-llamav2-with-tgi.hf.space/")
     response = client.predict(
         message,
         system_prompt,
