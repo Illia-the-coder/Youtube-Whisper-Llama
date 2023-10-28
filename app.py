@@ -172,7 +172,7 @@ if prompt := textinput:
   with st.status("Requesting Client..."):
     video_title, _ = get_video_title(st.session_state.youtube_url)
     additional_context = f"Given the context about a video titled '{video_title}' available at '{st.session_state.youtube_url}'."
-    response = st.session_state.qa.run( prompt+ " " + additional_context)
+    response = st.session_state.qa.run( prompt)
   with st.chat_message("assistant", avatar='🦙'):
       st.markdown(response)
   # Add assistant response to chat history
