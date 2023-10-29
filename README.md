@@ -1,7 +1,7 @@
 ---
 title: Chat With Youtube Video Llama 2 70b
 emoji: 🦙
-colorFrom: gray
+colorFrom: indigo
 colorTo: blue
 sdk: streamlit
 pinned: false
