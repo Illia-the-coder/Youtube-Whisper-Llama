@@ -149,7 +149,7 @@ if st.session_state.youtube_url and not st.session_state.setup_done :
       docsearch = FAISS.from_documents(docs, embeddings)
       retriever = docsearch.as_retriever()
       retriever.search_kwargs['distance_metric'] = 'cos'
-      retriever.search_kwargs['k'] = 4
+      retriever.search_kwargs['k'] = 10
     with st.status("Running RetrievalQA..."):
       llama_instance = LlamaLLM()
       st.session_state.qa = RetrievalQA.from_chain_type(llm=llama_instance, chain_type="stuff", retriever=retriever,chain_type_kwargs={"prompt": prompt})
