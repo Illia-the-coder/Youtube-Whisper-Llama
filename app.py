@@ -88,7 +88,7 @@ def transcribe_video(youtube_url: str, path: str) -> List[Document]:
     logging.info(f"Transcribing video: {youtube_url}")
     client = Client("https://sanchit-gandhi-whisper-jax.hf.space/")
     result = client.predict(youtube_url, "translate", True, fn_index=7)
-    return [Document(page_content=result[1], metadata=dict(page=1)]
+    return [Document(page_content=result[1], metadata=dict(page=1))]
 
 def predict(
     message: str, system_prompt: str = "", model_url: str = models["Llama2-70b"]["chat_link"]
