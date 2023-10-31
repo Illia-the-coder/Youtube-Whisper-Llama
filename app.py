@@ -15,6 +15,46 @@ import streamlit as st
 from pytube import YouTube
 # import replicate
 
+DESCRIPTION = """
+<div class="max-w-full overflow-auto">
+    <table>
+        <thead>
+            <tr>
+                <th>Model</th>
+                <th>Llama2</th>
+                <th>Llama2-hf</th>
+                <th>Llama2-chat</th>
+                <th>Llama2-chat-hf</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>7B</td>
+                <td><a rel="noopener nofollow" href="https://huggingface.co/meta-llama/Llama-2-7b">Link</a></td>
+                <td><a rel="noopener nofollow" href="https://huggingface.co/meta-llama/Llama-2-7b-hf">Link</a></td>
+                <td><a rel="noopener nofollow" href="https://huggingface.co/meta-llama/Llama-2-7b-chat">Link</a></td>
+                <td><a rel="noopener nofollow" href="https://huggingface.co/meta-llama/Llama-2-7b-chat-hf">Link</a></td>
+            </tr>
+            <tr>
+                <td>13B</td>
+                <td><a rel="noopener nofollow" href="https://huggingface.co/meta-llama/Llama-2-13b">Link</a></td>
+                <td><a rel="noopener nofollow" href="https://huggingface.co/meta-llama/Llama-2-13b-hf">Link</a></td>
+                <td><a rel="noopener nofollow" href="https://huggingface.co/meta-llama/Llama-2-13b-chat">Link</a></td>
+                <td><a rel="noopener nofollow" href="https://huggingface.co/meta-llama/Llama-2-13b-chat-hf">Link</a></td>
+            </tr>
+            <tr>
+                <td>70B</td>
+                <td><a rel="noopener nofollow" href="https://huggingface.co/meta-llama/Llama-2-70b">Link</a></td>
+                <td><a rel="noopener nofollow" href="https://huggingface.co/meta-llama/Llama-2-70b-hf">Link</a></td>
+                <td><a rel="noopener nofollow" href="https://huggingface.co/meta-llama/Llama-2-70b-chat">Link</a></td>
+                <td><a rel="noopener nofollow" href="https://huggingface.co/meta-llama/Llama-2-70b-chat-hf">Link</a></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+"""
+
 models = {
     "Llama2-70b": {
         "model_link": "https://huggingface.co/meta-llama/Llama-2-70b",
