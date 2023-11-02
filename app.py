@@ -127,6 +127,14 @@ def sidebar():
 
             # Embed the video
             st.markdown(embed_html, unsafe_allow_html=True)
+            
+         # Add file uploader
+        uploaded_file = st.file_uploader("Upload a video file")
+
+        if uploaded_file is not not None:
+            # You can process the uploaded file here
+            # For example, you can save it to a specific location or analyze its content
+            st.markdown("You have uploaded a file.")
 
 sidebar()
 initialize_session_state()
