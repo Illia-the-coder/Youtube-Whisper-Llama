@@ -52,7 +52,7 @@ DESCRIPTION = """
         </tbody>
     </table>
 </div>
-
+openai/whisper-large-v3
 """
 
 models = {
